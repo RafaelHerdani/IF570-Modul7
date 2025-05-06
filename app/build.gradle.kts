@@ -1,40 +1,21 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.compose") // Add this if alias doesn't work
 }
 
 android {
-    compileSdk = 35
+    namespace = "com.android.example.cameraxapp"
+    compileSdk = 34 // Updated to 34
 
     defaultConfig {
-        applicationId = "com.example.inventory"
-        minSdk = 24
-        targetSdk = 35
+        applicationId = "com.android.example.cameraxapp"
+        minSdk = 21
+        targetSdk = 34 // Updated to 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
@@ -46,37 +27,62 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+        viewBinding = true
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    namespace = "com.example.inventory"
 }
 
 dependencies {
-    // Import the Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("androidx.navigation:navigation-compose:2.8.5")
+    // Core dependencies
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.activity:activity-compose:1.8.0")
 
-    // Testing
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    implementation("androidx.appcompat:appcompat:1.6.1") // AppCompatActivity
+    implementation("androidx.activity:activity-ktx:1.8.0") // activity
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2") // Lifecycle
+    implementation("androidx.core:core-ktx:1.12.0") // Core utilities
+    implementation("androidx.camera:camera-core:1.3.0")
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-video:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0")
+    implementation("androidx.camera:camera-extensions:1.3.0")
+    // Jetpack Compose dependencies
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.ui:ui-graphics:1.5.4")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation(libs.androidx.constraintlayout)
+    androidTestImplementation(libs.androidx.ui.test.android) // Changed to androidTestImplementation
+
+    // CameraX dependencies
+    val camerax_version = "1.2.2"
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-video:$camerax_version")
+    implementation("androidx.camera:camera-view:$camerax_version")
+    implementation("androidx.camera:camera-extensions:$camerax_version")
+
+    // Testing dependencies
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.0") // Updated to 3.6.0
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+
+    // Debug dependencies
+    debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 }
